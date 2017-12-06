@@ -3,7 +3,7 @@ version: '2'
 services:
   webserver:
     build: ./docker/webserver
-    image: runwaytest_web
+    image: phptest_web
     ports:
       - "80:80"
       - "443:443"
