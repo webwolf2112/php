@@ -1,18 +1,32 @@
 <?php
-  //database
+  include('commonFunctions.php');
+  //variables
   $servername = "db";
   $username = "root";
   $password = "docker";
   $table = "returnPath";
 
-  //api server
+  //Request Methon Paramaters
   $serverRequest = $_SERVER['REQUEST_METHOD'];
   $url_elements = explode('/', $_SERVER['PATH_INFO']);
 
-  echo $serverRequest. "<br>";
-  echo $_SERVER['PATH_INFO'] . '<br><br>';
-
+  //Database Connection Info
   $con = mysqli_connect($servername, $username, $password, $table);
+
+
+
+
+  echo 'Server Request Type ' . $serverRequest. "<br>";
+  echo 'Server Path Info ' . $_SERVER['PATH_INFO'] . '<br><br>';
+
+  //database items to store
+  $to_email = filter_var($_POST['to'], FILTER_SANITIZE_STRING);
+  $from_email = filter_var($_POST['from'], FILTER_SANITIZE_STRING);
+  $subject = filter_var($_POST['subject'], FILTER_SANITIZE_STRING);
+  $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
+  $message_id = filter_var($_POST['message_id'], FILTER_SANITIZE_STRING);
+
+  echo $to_email . ' ' . $from_email . ' '. $subject . ' ' . $date . ' ' . $message_id;
 
     // Check connection
     if (mysqli_connect_errno())
@@ -40,6 +54,16 @@
     mysqli_close($con);
   }
 
+  // https://www.leaseweb.com/labs/2015/10/creating-a-simple-rest-api-in-php/
+  // switch ($method) {
+  // case 'GET':
+  //   $sql = "select * from `$table`".($key?" WHERE id=$key":''); break;
+  // case 'PUT':
+  //   $sql = "update `$table` set $set where id=$key"; break;
+  // case 'POST':
+  //   $sql = "insert into `$table` set $set"; break;
+  // case 'DELETE':
+  //   $sql = "delete `$table` where id=$key"; break;
 
 
 
