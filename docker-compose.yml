@@ -5,10 +5,10 @@ services:
     build: ./docker/webserver
     image: phptest_web
     ports:
-      - "80:80"
+      - "90:80"
       - "443:443"
     volumes:
-      - /Users/vhenson/projects/php/www:/var/www/html
+      - /Users/vanessahenson/projects/php/www:/var/www/html
     links:
       - db
 
@@ -21,3 +21,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=docker
       - MYSQL_DATABASE=db_runwaytest
+
+  ui:
+    build: ./front-end-ui
+    image: ui_webtest
+    ports:
+      - "80:4200"
