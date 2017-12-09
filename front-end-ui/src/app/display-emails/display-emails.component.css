@@ -1,0 +1,16 @@
+:host {
+
+}
+p {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+
+.flex-container {
+  display: flex;
+  margin: 20px;
+}
+div {
+  margin: 0 50px;
+}
