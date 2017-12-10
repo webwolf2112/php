@@ -9,7 +9,7 @@ import { DisplayEmailDataComponent } from './display-email-data/display-email-da
 import { DisplayEmailsComponent } from './display-emails/display-emails.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-
+import { ApiService } from './api-service.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +24,7 @@ import { FooterComponent } from './footer/footer.component';
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

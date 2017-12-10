@@ -4,8 +4,21 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class ApiServiceService {
+export class ApiService {
+  $url = `http://localhost:90/`;
 
-  constructor(private http : Http) { }
+  constructor (
+    private http : Http
+  ) {}
+
+  getEmails() {
+
+  return this.http.get(this.$url)
+   .map((res:Response) => res.json());
+ }
+
+ // postEmails() {
+ //   this.http.post()
+ // }
 
 }

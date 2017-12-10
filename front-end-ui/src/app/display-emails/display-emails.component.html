@@ -1,5 +1,6 @@
 <p>Displaying Emails from database: </p>
 <div class="flex-container">
+  {{message}}
   <div class="email" *ngFor="let email of emails">
     <p>
       To: {{email.to}} <br>

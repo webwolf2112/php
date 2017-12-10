@@ -8,9 +8,11 @@ p {
 }
 
 .flex-container {
-  display: flex;
-  margin: 20px;
+  display: inline-flex;
+  flex-flow: column wrap;
+  flex-direction: row;
+  text-align: center;
 }
 div {
-  margin: 0 50px;
+  box-sizing: border-box;
 }
