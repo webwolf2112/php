@@ -1,44 +1,46 @@
 <?php
+  include('variables.php');
   include('commonFunctions.php');
 
-  //TO DO BREAK THIS DOWN INTO OOP
-
-  //variables
-  $servername = "db";
-  $username = "root";
-  $password = "docker";
-  $db = "returnPath";
-  $table = "emails";
-
-  //Request Methon Paramaters
-  $method = $_SERVER['REQUEST_METHOD'];
-  $url_elements = explode('/', $_SERVER['PATH_INFO']);
-
-  //Database Connection Info
   $con = mysqli_connect($servername, $username, $password, $db);
 
-
-
-
-  echo 'Server Request Type ' . $serverRequest. "<br>";
-  echo 'Server Path Info ' . $_SERVER['PATH_INFO'] . '<br><br>';
-
   //database items to store
-  $to_email = filter_var($_POST['to'], FILTER_SANITIZE_STRING);
-  $from_email = filter_var($_POST['from'], FILTER_SANITIZE_STRING);
-  $subject = filter_var($_POST['subject'], FILTER_SANITIZE_STRING);
-  $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
-  $message_id = filter_var($_POST['message_id'], FILTER_SANITIZE_STRING);
+  $to_email = sanatizePostData('to');
+  $from_email = sanatizePostData('from');
+  $subject = sanatizePostData('subject');
+  $date = sanatizePostData('date');
+  $message_id = sanatizePostData('message_id');
 
-  echo $to_email . ' ' . $from_email . ' '. $subject . ' ' . $date . ' ' . $message_id;
+  class Email {
+    public $to;
+    public $from;
+    public $subject;
+    public $message_id;
+    public $date;
+  }
+
+  class ReturnMessage {
+      public $return_message;
+      public $return_data;
+  }
 
     // Check connection
     if (mysqli_connect_errno())
     {
-      echo "Failed to connect to MySQL: " . mysqli_connect_error();
+      $data = new ReturnMessage();
+      $data-> $return_message = "Failed to connect to MySQL: " . mysqli_connect_error();
+      $data-> $return_data = [];
+
+      echo json_encode($data);
+
     } else {
 
       //SET THE CORRECT endpoint
+      if(isset($_SERVER['REQUEST_METHOD'])) {
+          $method = $_SERVER['REQUEST_METHOD'];
+      } else {
+        $method = 'GET';
+      }
 
       switch ($method) {
       case 'GET':
@@ -52,52 +54,45 @@
           break;
       }
 
-
       //TODO
-      // case 'PUT':
-      //   $sql_query = "";
-      //   break;
-      // case 'DELETE':
-      //   $sql_query = "";
-      //   break;
-      // }
+      //Add the PUT and Delete Methods into query prams
 
-      echo($sql_query);
-
-
-
-
-      //query the database for all of the rows
       $mysqli = new mysqli($servername, $username, $password, $db);
-      // $sql_query = "SELECT * FROM $table";
 
-
-      //parse through the results
       if ($result = $mysqli->query($sql_query)) {
-        printf("Select returned %d rows.\n", $result->num_rows, "\n");
-        printf(varDump($result));
 
-        //loop through each row to parse the data
         if($method == 'GET') {
-          while($row = $result->fetch_assoc()) {
 
-              echo "<br>" . "To Email " . $row["to_email"]. " From Email " . $row["from_email"] . "  Date " . $row["date_email"] . " Subject " . $row["subject"];
+          $data = new ReturnMessage();
+          $data->return_message = "Emails returned from server";
+          $return_data = [];
+
+          while($row = $result->fetch_assoc()) {
+            $email = new Email();
+            $email->to = $row["to_email"];
+            $email->from = $row["from_email"];
+            $email->subject = $row["subject"];
+            $email->date = $row["date_email"];
+            $email->message_id = $row["message_id"];
+
+            array_push($return_data, $email);
           }
 
+          $data->return_data = $return_data;
           $result->close();
-
         } else {
-          echo "Your New message has been posted";
+
+          $data = new ReturnMessage();
+          $data->return_message = "Your email message has been submitted";
+          $data-> $return_data = [];
+
         }
-        /* free result set */
+
+        header('Content-Type: application/json');
+        header("Access-Control-Allow-Origin: *");
+        echo json_encode($data);
     }
 
     mysqli_close($con);
   }
-
-
-  //deliver the endpoint
-
-//SELECT * FROM emails WHERE from_email = 'chris@email.com';
-//SELECT * FROM emails;
 ?>
