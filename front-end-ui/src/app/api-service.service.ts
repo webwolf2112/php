@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
@@ -17,8 +17,17 @@ export class ApiService {
    .map((res:Response) => res.json());
  }
 
- // postEmails() {
- //   this.http.post()
- // }
+ postEmail($emailMessage) {
+   let headers = new Headers();
+   //headers.append('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
+   headers.append('Content-Type', 'multipart/form-data; charset=utf-8');
+   //headers.append('Content-Type', 'application/vnd.ms-outlook');
+   headers.append('Accept', 'application/json');
+
+  let options = new RequestOptions({ headers: headers });
+
+  return this.http.post(this.$url, $emailMessage, options)
+    .map((res:Response) => res.json());
+ }
 
 }

@@ -88,8 +88,12 @@
 
         }
 
-        header('Content-Type: application/json');
+        $data->post_var = $_FILES;
+        $data->email = $_POST;
+
+        header('Content-Type: application/x-www-form-urlencoded');
         header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         echo json_encode($data);
     }
 
