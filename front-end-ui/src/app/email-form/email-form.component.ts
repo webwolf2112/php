@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api-service.service';
-declare var mailparser: any;
+var read = require('read-file');
 
 @Component({
   selector: 'app-email-form',
@@ -24,19 +24,67 @@ export class EmailFormComponent implements OnInit {
   let message = this.generateMessage(event.target.files);
 
   //Post Email Message
-  this.submitMessageData(message);
+  // this.submitMessageData(message);
 
   }
 
   generateMessage(file) {
-    var formData = new FormData();
-    console.log(file);
-    formData.append("file", file[0], file[0].filename);
-    console.log(file[0]);
-    console.log(file[0].name);
-    console.log(file[0].mimetype);
 
-    return formData;
+  var reader = new FileReader();
+  let text;
+  let that = this;
+  let message = {};
+  let subject = '';
+  let subjectCount = 0;
+
+  reader.onload = function(e) {
+    text = reader.result;
+
+    let lines = text.split('\n');
+
+    for(var i = 0; i < lines.length; i++){
+
+      that.findSingleLineValue(lines[i], message, 'To:');
+      that.findSingleLineValue(lines[i], message, 'From:');
+      that.findSingleLineValue(lines[i], message, 'Date:');
+      that.findSingleLineValue(lines[i], message, 'Message-ID:');
+      subject = that.findMultiLineValue(lines[i], 'Subject:', subject, subjectCount);
+
+     }
+
+     message['subject'] = subject;
+     console.log(message);
+     return message;
+  }
+
+
+  reader.readAsText(file[0]);
+
+  }
+
+  findMultiLineValue(line, value, multiString, countLine) {
+    if(countLine === 0) {
+      console.log(line.indexOf('Subject:'));
+      if(line.indexOf(value) > -1) {
+        var foundLine = line.slice(line.indexOf(':') + 1).trim();
+        multiString += foundLine;
+        countLine ++;
+      }
+    } else {
+      if(line.indexOf(":") < 0 ) {
+        multiString += (" " + line);
+      }
+    }
+      return multiString;
+  }
+
+  findSingleLineValue(line, message, value) {
+    if(line.indexOf(value) > -1) {
+      var foundLine = line.slice(line.indexOf(':') + 1);
+      foundLine= line.slice(line.indexOf('<') + 1, line.indexOf('>')).replace(/(^[ \t]*\n)/gm, "").trim();
+      message[value.slice(0, value.indexOf(':')).toLowerCase()] = foundLine;
+    }
+    return message;
   }
 
   submitMessageData(data) {
