@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api-service.service';
-var read = require('read-file');
 
 @Component({
   selector: 'app-email-form',
@@ -21,21 +20,31 @@ export class EmailFormComponent implements OnInit {
 
   onChange(event) {
 
-  let message = this.generateMessage(event.target.files);
+  this.generateMessage(event.target.files).then((data)=>{
+
+    // console.log(data);
+    this.submitMessageData(data);
+    console.log('message callback');
+  });
+
+  //console.log(message);
+  //console.log(this.$emailMessage);
 
   //Post Email Message
-  // this.submitMessageData(message);
+
 
   }
 
   generateMessage(file) {
 
-  var reader = new FileReader();
-  let text;
-  let that = this;
-  let message = {};
-  let subject = '';
-  let subjectCount = 0;
+    var reader = new FileReader();
+    let text;
+    let generateMessage = this;
+    let message = {};
+    let subject = '';
+    let subjectCount = 0;
+
+   return new Promise(function(resolve, reject) {
 
   reader.onload = function(e) {
     text = reader.result;
@@ -44,22 +53,23 @@ export class EmailFormComponent implements OnInit {
 
     for(var i = 0; i < lines.length; i++){
 
-      that.findSingleLineValue(lines[i], message, 'To:');
-      that.findSingleLineValue(lines[i], message, 'From:');
-      that.findSingleLineValue(lines[i], message, 'Date:');
-      that.findSingleLineValue(lines[i], message, 'Message-ID:');
-      subject = that.findMultiLineValue(lines[i], 'Subject:', subject, subjectCount);
+      generateMessage.findSingleLineValue(lines[i], message, 'To:');
+      generateMessage.findSingleLineValue(lines[i], message, 'From:');
+      generateMessage.findSingleLineValue(lines[i], message, 'Date:');
+      generateMessage.findSingleLineValue(lines[i], message, 'Message-ID:');
+      generateMessage.findSingleLineValue(lines[i], message, 'Subject:')
+      //subject = that.findMultiLineValue(lines[i], 'Subject:', subject, subjectCount);
 
      }
 
-     message['subject'] = subject;
-     console.log(message);
-     return message;
+    // message['subject'] = subject;
+     //console.log(message);
+     resolve( message );
   }
-
 
   reader.readAsText(file[0]);
 
+   });
   }
 
   findMultiLineValue(line, value, multiString, countLine) {
@@ -90,8 +100,11 @@ export class EmailFormComponent implements OnInit {
   submitMessageData(data) {
     this.apiService.postEmail(data).subscribe((data)=> {
       console.log(data.return_message);
-      console.log(data.post_var);
-      console.log(data.email)
+      // console.log(data.post_var);
+      console.log(data.email);
+
+      //TODO redo this to refresh the component not the entire page refresh
+      location.reload();
     })
   }
   ngOnInit() {}
