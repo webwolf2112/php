@@ -1,6 +1,4 @@
-<p>Displaying Emails from database: </p>
-<div class="flex-container">
-  {{message}}
+  <div class="grid-container">
   <div class="email" *ngFor="let email of emails">
     <p ng-bind-html="email.date">
       To: {{email.to}} <br>

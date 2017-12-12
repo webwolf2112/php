@@ -71,7 +71,7 @@ export class EmailFormComponent implements OnInit {
   findSingleLineValue(line, message, value) {
     if(line.indexOf(value) === 0) {
       var foundLine = line.slice(line.indexOf(':') + 1);
-      foundLine= line.slice(line.indexOf('<') + 1, line.indexOf('>')).replace(/(^[ \t]*\n)/gm, "").trim();
+      foundLine= foundLine.slice(line.indexOf('<') + 1, line.indexOf('>')).replace(/(^[ \t]*\n)/gm, "").trim();
       message[value.slice(0, value.indexOf(':')).toLowerCase()] = foundLine;
     }
     return message;
