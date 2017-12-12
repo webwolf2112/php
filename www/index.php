@@ -2,15 +2,6 @@
   include('variables.php');
   include('commonFunctions.php');
 
-  $con = mysqli_connect($servername, $username, $password, $db);
-
-  //database items to store
-  $to_email = sanatizePostData('to');
-  $from_email = sanatizePostData('from');
-  $subject = sanatizePostData('subject');
-  $date = sanatizePostData('date');
-  $message_id = sanatizePostData('message_id');
-
   class Email {
     public $to;
     public $from;
@@ -24,6 +15,16 @@
       public $return_data;
   }
 
+  $common = new CommonFunctions();
+  $con = mysqli_connect($servername, $username, $password, $db);
+
+  //database items to store
+  $to_email = $common->sanatizePostData('to');
+  $from_email = $common->sanatizePostData('from');
+  $subject = $common->sanatizePostData('subject');
+  $date = $common->sanatizePostData('date');
+  $message_id = $common->sanatizePostData('message_id');
+
     // Check connection
     if (mysqli_connect_errno())
     {
@@ -35,7 +36,7 @@
 
     } else {
 
-      //SET THE CORRECT endpoint
+      //SET THE CORRECT Method
       if(isset($_SERVER['REQUEST_METHOD'])) {
           $method = $_SERVER['REQUEST_METHOD'];
       } else {
@@ -54,8 +55,7 @@
           break;
       }
 
-      //TODO
-      //Add the PUT and Delete Methods into query prams
+      //TODO Add the PUT and Delete Methods into query prams
 
       $mysqli = new mysqli($servername, $username, $password, $db);
 
@@ -85,7 +85,6 @@
           $data = new ReturnMessage();
           $data->return_message = "Your email message has been submitted";
           $data-> $return_data = [];
-
         }
 
         $data->post_var = $_FILES;

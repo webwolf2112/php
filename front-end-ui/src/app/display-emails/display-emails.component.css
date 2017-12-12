@@ -8,11 +8,13 @@ p {
 }
 
 .flex-container {
-  display: inline-flex;
-  flex-flow: column wrap;
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: column-wrap;
   flex-direction: row;
   text-align: center;
 }
 div {
   box-sizing: border-box;
+  padding: 20px;
 }

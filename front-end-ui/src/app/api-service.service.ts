@@ -19,9 +19,7 @@ export class ApiService {
 
  postEmail($emailMessage) {
    let headers = new Headers();
-   //headers.append('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
    headers.append('Content-Type', 'multipart/form-data; charset=utf-8');
-   //headers.append('Content-Type', 'application/vnd.ms-outlook');
    headers.append('Accept', 'application/json');
 
   let options = new RequestOptions({ headers: headers });

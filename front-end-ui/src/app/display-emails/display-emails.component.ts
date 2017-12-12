@@ -9,6 +9,10 @@ import { ApiService } from '../api-service.service';
 export class DisplayEmailsComponent {
   emails = [];
 
+  toHTML(input) : any {
+    return new DOMParser().parseFromString(input, "text/html").documentElement.textContent;
+  }
+
   constructor(public apiService: ApiService) {}
 
   ngOnInit(){
