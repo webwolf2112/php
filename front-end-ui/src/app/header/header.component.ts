@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class HeaderComponent implements OnInit {
 
   title = 'Vanessa Henson Return Path Developer';
-  subtitle = `Here's the code to prove it`;
+  subtitle = `Here's the code to prove it.`;
 
   constructor() { }
 
